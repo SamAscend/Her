@@ -1018,57 +1018,107 @@
         }
 
         // =========== MUSIC PLAYER FUNGSI ===========
-        function initializeMusicPlayer() {
-            const selector = document.getElementById('songSelector');
-            websiteData.loveSongs.forEach((song, index) => {
-                const option = document.createElement('option');
-                option.value = index;
-                option.textContent = song.name;
-                selector.appendChild(option);
-            });
-            
-            selector.addEventListener('change', function() {
-                currentSongIndex = parseInt(this.value);
-                if (!isNaN(currentSongIndex)) {
-                    playSong(currentSongIndex);
-                }
-            });
-        }
+        // =========== DATA LAGU (HANYA GANTI INI) ===========
+websiteData.loveSongs = [
+    { 
+        name: "Awal Kisah Selamanya - Raisa", 
+        youtubeId: "lkgMgPJjHwI",  // Hanya ID YouTube
+        type: "youtube"
+    },
+    { 
+        name: "Kota Ini Tak Sama Tanpamu - Nadhif Basalamah", 
+        youtubeId: "grp6FCnioMM",
+        type: "youtube"
+    }
+];
 
-        function toggleMusic() {
-            const musicPlayer = document.getElementById('musicPlayer');
-            musicPlayer.style.display = musicPlayer.style.display === 'none' ? 'flex' : 'none';
+// =========== KODE YANG SAMA ===========
+function initializeMusicPlayer() {
+    const selector = document.getElementById('songSelector');
+    websiteData.loveSongs.forEach((song, index) => {
+        const option = document.createElement('option');
+        option.value = index;
+        option.textContent = song.name;
+        selector.appendChild(option);
+    });
+    
+    selector.addEventListener('change', function() {
+        currentSongIndex = parseInt(this.value);
+        if (!isNaN(currentSongIndex)) {
+            playSong(currentSongIndex);
         }
+    });
+}
 
-        function togglePlay() {
-            const audio = document.getElementById('backgroundMusic');
-            const playBtn = document.getElementById('playBtn');
-            
-            if (isMusicPlaying) {
-                audio.pause();
-                playBtn.innerHTML = '<i class="fas fa-play"></i>';
-            } else {
-                if (audio.src) {
-                    audio.play();
-                } else {
-                    playSong(0);
-                }
-                playBtn.innerHTML = '<i class="fas fa-pause"></i>';
-            }
-            isMusicPlaying = !isMusicPlaying;
-        }
+function toggleMusic() {
+    const musicPlayer = document.getElementById('musicPlayer');
+    musicPlayer.style.display = musicPlayer.style.display === 'none' ? 'flex' : 'none';
+}
 
-        function playSong(index) {
-            const audio = document.getElementById('backgroundMusic');
-            const song = websiteData.loveSongs[index];
-            
-            audio.src = song.url;
-            audio.play();
-            isMusicPlaying = true;
+// =========== TOGGLE PLAY YANG DIUBAH SEDIKIT ===========
+function togglePlay() {
+    if (youtubePlayer) {
+        if (isMusicPlaying) {
+            youtubePlayer.pauseVideo();
+            document.getElementById('playBtn').innerHTML = '<i class="fas fa-play"></i>';
+        } else {
+            youtubePlayer.playVideo();
             document.getElementById('playBtn').innerHTML = '<i class="fas fa-pause"></i>';
-            document.getElementById('nowPlaying').textContent = song.name;
-            document.getElementById('songSelector').value = index;
         }
+        isMusicPlaying = !isMusicPlaying;
+    }
+}
+
+// =========== PLAYSONG YANG DIUBAH ===========
+let youtubePlayer;
+
+function playSong(index) {
+    const song = websiteData.loveSongs[index];
+    
+    // Update UI - SAMA
+    document.getElementById('nowPlaying').textContent = song.name;
+    document.getElementById('songSelector').value = index;
+    
+    // Play lagu YouTube
+    playYouTubeSong(song.youtubeId);
+    
+    // Update button - SAMA
+    document.getElementById('playBtn').innerHTML = '<i class="fas fa-pause"></i>';
+    isMusicPlaying = true;
+}
+
+// =========== FUNGSI UTAMA YOUTUBE PLAYER ===========
+function playYouTubeSong(videoId) {
+    if (!youtubePlayer) {
+        // Load YouTube API
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        document.head.appendChild(tag);
+        
+        window.onYouTubeIframeAPIReady = function() {
+            youtubePlayer = new YT.Player('youtubePlayer', {
+                height: '0',
+                width: '0',
+                videoId: videoId,
+                events: {
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        };
+    } else {
+        youtubePlayer.loadVideoById(videoId);
+    }
+}
+
+function onPlayerStateChange(event) {
+    if (event.data == YT.PlayerState.PLAYING) {
+        document.getElementById('playBtn').innerHTML = '<i class="fas fa-pause"></i>';
+        isMusicPlaying = true;
+    } else if (event.data == YT.PlayerState.PAUSED) {
+        document.getElementById('playBtn').innerHTML = '<i class="fas fa-play"></i>';
+        isMusicPlaying = false;
+    }
+}
 
         // =========== GUESTBOOK FUNGSI ===========
         function addGuestMessage() {
