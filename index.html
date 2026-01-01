@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surga Kecilku - Untuk Cintaku</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #ff4d8d;
+            --secondary: #ff99c8;
+            --accent: #ffd166;
+            --light: #fff5f9;
+            --dark: #5a0033;
+        }
+
+        body {
+            font-family: 'Dancing Script', cursive, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.8;
+            background: var(--light);
+            color: #333;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.8) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(255, 77, 141, 0.1) 0%, transparent 20%);
+        }
+
+        /* CURSOR HEART */
+        .heart-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            pointer-events: none;
+            z-index: 9999;
+            font-size: 20px;
+            color: var(--primary);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        /* SNOW/HEART FALL */
+        .falling-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* LOADING SCREEN */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 1s;
+        }
+
+        .loading-heart {
+            font-size: 60px;
+            color: white;
+            animation: heartbeat 1.5s infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        /* NAVIGASI ROMANTIS */
+        .romantic-nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem;
+            box-shadow: 0 2px 20px rgba(255, 77, 141, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            color: var(--dark);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-link:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+        }
+
+        /* HERO SECTION */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            padding: 6rem 1rem 2rem;
+            background: linear-gradient(45deg, rgba(255, 77, 141, 0.1), rgba(255, 153, 200, 0.1));
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 800px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .couple-names {
+            font-family: 'Dancing Script', cursive;
+            font-size: 4rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .heart-divider {
+            font-size: 3rem;
+            color: var(--accent);
+            margin: 2rem 0;
+            animation: pulse 2s infinite;
+        }
+
+        /* GALERI FOTO */
+        .gallery-section {
+            padding: 5rem 1rem;
+            background: white;
+        }
+
+        .section-title {
+            text-align: center;
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem;
+            color: var(--primary);
+            margin-bottom: 3rem;
+        }
+
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1.5rem;
+            border: 2px solid var(--primary);
+            background: transparent;
+            color: var(--primary);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn.active,
+        .filter-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            height: 300px;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(255, 77, 141, 0.2);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .photo-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(90, 0, 51, 0.8));
+            color: white;
+            padding: 1.5rem;
+            transform: translateY(100%);
+            transition: transform 0.3s;
+        }
+
+        .gallery-item:hover .photo-overlay {
+            transform: translateY(0);
+        }
+
+        /* LOVE MESSAGES */
+        .messages-section {
+            padding: 5rem 1rem;
+            background: linear-gradient(135deg, #fff5f9, #ffe6f2);
+        }
+
+        .message-container {
+            max-width: 800px;
+            margin: 0 auto;
+            perspective: 1000px;
+        }
+
+        .message-card {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(255, 77, 141, 0.15);
+            text-align: center;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+        }
+
+        .message-card:hover {
+            transform: rotateY(5deg) rotateX(5deg);
+        }
+
+        .message-text {
+            font-size: 1.5rem;
+            color: var(--dark);
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        .message-nav {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .message-btn {
+            padding: 1rem 2rem;
+            border: none;
+            background: var(--primary);
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .message-btn:hover {
+            background: var(--dark);
+            transform: scale(1.05);
+        }
+
+        /* LOVE TIMER */
+        .timer-section {
+            padding: 5rem 1rem;
+            background: white;
+        }
+
+        .timer-container {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .timer-box {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            min-width: 120px;
+            box-shadow: 0 10px 30px rgba(255, 77, 141, 0.3);
+        }
+
+        .timer-number {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .timer-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* MUSIC PLAYER */
+        .music-player {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 50px;
+            padding: 1rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .music-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+        }
+
+        .music-btn:hover {
+            transform: scale(1.1);
+            background: var(--dark);
+        }
+
+        /* GUESTBOOK */
+        .guestbook-section {
+            padding: 5rem 1rem;
+            background: linear-gradient(135deg, #ffe6f2, #fff5f9);
+        }
+
+        .guestbook-form {
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(255, 77, 141, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-input:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        .guestbook-entries {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .guest-entry {
+            background: white;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--primary);
+        }
+
+        /* FOOTER */
+        .footer {
+            background: linear-gradient(135deg, var(--dark), #7a0044);
+            color: white;
+            padding: 4rem 1rem 2rem;
+            text-align: center;
+        }
+
+        .secret-message {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .secret-message:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .couple-names {
+                font-size: 2.5rem;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .nav-menu {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: white;
+                flex-direction: column;
+                padding: 1rem;
+                transform: translateY(-100%);
+                opacity: 0;
+                transition: all 0.3s;
+                box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            }
+            
+            .nav-menu.active {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+            
+            .timer-container {
+                gap: 1rem;
+            }
+            
+            .timer-box {
+                min-width: 100px;
+                padding: 1.5rem;
+            }
+            
+            .message-card {
+                padding: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .couple-names {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 2.5rem;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .music-player {
+                bottom: 10px;
+                right: 10px;
+                padding: 0.5rem;
+            }
+        }
+
+        /* ANIMATIONS */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* CUSTOM SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #ffe6f2;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--dark);
+        }
+    </style>
+</head>
+<body>
+    <!-- LOADING SCREEN -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-heart">❤️</div>
+        <h2 style="color: white;">Memuat Cinta...</h2>
+    </div>
+
+    <!-- HEART CURSOR -->
+    <div class="heart-cursor" id="heartCursor">❤</div>
+
+    <!-- FALLING HEARTS -->
+    <div class="falling-hearts" id="fallingHearts"></div>
+
+    <!-- NAVIGASI -->
+    <nav class="romantic-nav">
+        <div class="nav-container">
+            <a href="#" class="logo">ForeverUs 💖</a>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="nav-menu" id="navMenu">
+                <div class="nav-item">
+                    <a href="#home" class="nav-link"><i class="fas fa-home"></i> Home</a>
+                </div>
+                <div class="nav-item">
+                    <a href="#gallery" class="nav-link"><i class="fas fa-images"></i> Galeri</a>
+                </div>
+                <div class="nav-item">
+                    <a href="#messages" class="nav-link"><i class="fas fa-heart"></i> Pesan Cinta</a>
+                </div>
+                <div class="nav-item">
+                    <a href="#timer" class="nav-link"><i class="fas fa-clock"></i> Waktu Kita</a>
+                </div>
+                <div class="nav-item">
+                    <a href="#guestbook" class="nav-link"><i class="fas fa-book"></i> Buku Tamu</a>
+                </div>
+                <div class="nav-item">
+                    <button class="nav-link" onclick="toggleMusic()" id="musicToggle">
+                        <i class="fas fa-music"></i> Musik
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1 class="couple-names floating">
+                <span id="yourName">Kamu</span> 
+                <span class="heart-divider">💕</span> 
+                <span id="partnerName">Aku</span>
+            </h1>
+            <p style="font-size: 1.5rem; color: var(--dark); margin-bottom: 2rem;">
+                "Dalam setiap detak jantungku, ada namamu"
+            </p>
+            <div style="margin-top: 3rem;">
+                <button onclick="revealSurprise()" class="message-btn">
+                    <i class="fas fa-gift"></i> Kejutan Spesial
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- GALERI FOTO -->
+    <section id="gallery" class="gallery-section">
+        <h2 class="section-title">Kenangan Abadi</h2>
+        <div class="filter-buttons">
+            <button class="filter-btn active" onclick="filterGallery('all')">Semua</button>
+            <button class="filter-btn" onclick="filterGallery('first')">Pertama Kali</button>
+            <button class="filter-btn" onclick="filterGallery('travel')">Jalan-jalan</button>
+            <button class="filter-btn" onclick="filterGallery('special')">Momen Spesial</button>
+            <button class="filter-btn" onclick="filterGallery('daily')">Harian</button>
+        </div>
+        <div class="gallery-grid" id="photoGallery">
+            <!-- Foto akan di-generate oleh JavaScript -->
+        </div>
+    </section>
+
+    <!-- PESAN CINTA -->
+    <section id="messages" class="messages-section">
+        <h2 class="section-title">Kata dari Hati</h2>
+        <div class="message-container">
+            <div class="message-card">
+                <div class="message-text" id="currentMessage">
+                    Loading pesan cinta...
+                </div>
+                <div class="message-nav">
+                    <button class="message-btn" onclick="prevMessage()">
+                        <i class="fas fa-chevron-left"></i> Sebelumnya
+                    </button>
+                    <button class="message-btn" onclick="nextMessage()">
+                        Selanjutnya <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                <div style="margin-top: 2rem;">
+                    <button class="message-btn" onclick="addCustomMessage()">
+                        <i class="fas fa-plus"></i> Tambah Pesanmu
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LOVE TIMER -->
+    <section id="timer" class="timer-section">
+        <h2 class="section-title">Waktu Bersamamu</h2>
+        <div class="timer-container">
+            <div class="timer-box">
+                <div class="timer-number" id="years">0</div>
+                <div class="timer-label">Tahun</div>
+            </div>
+            <div class="timer-box">
+                <div class="timer-number" id="months">0</div>
+                <div class="timer-label">Bulan</div>
+            </div>
+            <div class="timer-box">
+                <div class="timer-number" id="days">0</div>
+                <div class="timer-label">Hari</div>
+            </div>
+            <div class="timer-box">
+                <div class="timer-number" id="hours">0</div>
+                <div class="timer-label">Jam</div>
+            </div>
+            <div class="timer-box">
+                <div class="timer-number" id="minutes">0</div>
+                <div class="timer-label">Menit</div>
+            </div>
+            <div class="timer-box">
+                <div class="timer-number" id="seconds">0</div>
+                <div class="timer-label">Detik</div>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 3rem;">
+            <button class="message-btn" onclick="setAnniversary()">
+                <i class="fas fa-calendar-alt"></i> Atur Hari Spesial
+            </button>
+        </div>
+    </section>
+
+    <!-- GUESTBOOK -->
+    <section id="guestbook" class="guestbook-section">
+        <h2 class="section-title">Buku Kenangan</h2>
+        <div class="guestbook-form">
+            <h3 style="color: var(--primary); margin-bottom: 1.5rem; text-align: center;">
+                Tulis Ucapan untuk Kita
+            </h3>
+            <div class="form-group">
+                <input type="text" class="form-input" id="guestName" placeholder="Nama Kamu">
+            </div>
+            <div class="form-group">
+                <textarea class="form-input" id="guestMessage" rows="4" placeholder="Tulis ucapan indahmu di sini..."></textarea>
+            </div>
+            <button class="message-btn" onclick="addGuestMessage()" style="width: 100%;">
+                <i class="fas fa-paper-plane"></i> Kirim Ucapan
+            </button>
+        </div>
+        <div class="guestbook-entries" id="guestEntries">
+            <!-- Ucapan akan muncul di sini -->
+        </div>
+    </section>
+
+    <!-- MUSIC PLAYER -->
+    <div class="music-player" id="musicPlayer">
+        <button class="music-btn" onclick="togglePlay()" id="playBtn">
+            <i class="fas fa-play"></i>
+        </button>
+        <div style="min-width: 100px;">
+            <div style="font-size: 0.9rem; color: var(--primary);">Lagu Cinta</div>
+            <div style="font-size: 0.8rem; color: #666;" id="nowPlaying">Pilih lagu</div>
+        </div>
+        <select id="songSelector" style="padding: 0.5rem; border-radius: 25px; border: 1px solid #eee;">
+            <option value="">Pilih Lagu</option>
+        </select>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <p style="font-size: 1.2rem; margin-bottom: 1rem;">
+            Dibuat dengan <i class="fas fa-heart" style="color: #ff4d8d;"></i> yang tak terhingga
+        </p>
+        <p style="margin-bottom: 2rem; opacity: 0.9;">
+            © <span id="currentYear"></span> - Untuk Selamanya
+        </p>
+        <div class="secret-message" onclick="revealSecret()">
+            <p style="margin: 0; font-size: 0.9rem;">
+                <i class="fas fa-lock"></i> Klik untuk pesan rahasia
+            </p>
+        </div>
+    </footer>
+
+    <!-- AUDIO ELEMENT -->
+    <audio id="backgroundMusic" loop>
+        <source src="https://assets.codepen.io/1468070/romantic-music.mp3" type="audio/mpeg">
+        Browser Anda tidak mendukung audio.
+    </audio>
+
+    <!-- SCRIPT -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+    <script>
+        // =========== DATA WEBSITE ===========
+        const websiteData = {
+            partnerName: "",
+            yourName: "",
+            anniversaryDate: null,
+            
+            loveMessages: [
+                "Di antara miliar bintang di langit, kamu adalah satu-satunya yang membuat hatiku berbinar.",
+                "Cintaku padamu seperti oksigen - tak terlihat, tapi sangat penting untuk hidupku.",
+                "Setiap hari bersamamu adalah halaman baru dalam buku terindah yang pernah kutulis.",
+                "Jika cinta adalah seni, maka kamu adalah mahakaryaku yang paling sempurna.",
+                "Di dunia yang penuh dengan orang, hanya kamu yang membuatku merasa lengkap.",
+                "Aku tidak butuh sayap untuk terbang, karena bersamamu aku sudah di surga.",
+                "Cinta kita seperti bintang laut - cantik, langka, dan hanya bisa ditemukan di tempat yang spesial.",
+                "Kamu adalah alasan mengapa pagi selalu terasa lebih cerah.",
+                "Dalam galaksi perasaan, kamu adalah tata surya yang memutari hatiku.",
+                "Aku mencintaimu lebih dari kata-kata yang bisa diucapkan, lebih dari puisi yang bisa ditulis."
+            ],
+            
+            customMessages: [],
+            
+            photos: [
+                {
+                    url: 'https://images.unsplash.com/photo-1518568814500-bf0f8d125f46?w=800&q=80',
+                    caption: 'Momen pertama kita tersenyum bersama',
+                    category: 'first',
+                    date: '2023-01-15'
+                },
+                {
+                    url: 'https://images.unsplash.com/photo-1518568814500-bf0f8d125f46?w-800&q=80',
+                    caption: 'Petualangan di tempat baru',
+                    category: 'travel',
+                    date: '2023-03-20'
+                },
+                {
+                    url: 'https://images.unsplash.com/photo-1518568814500-bf0f8d125f46?w=800&q=80',
+                    caption: 'Celebrating our love',
+                    category: 'special',
+                    date: '2023-05-20'
+                },
+                {
+                    url: 'https://images.unsplash.com/photo-1518568814500-bf0f8d125f46?w=800&q=80',
+                    caption: 'Simple happy moments',
+                    category: 'daily',
+                    date: '2023-07-10'
+                }
+            ],
+            
+            guestbook: [],
+            
+            loveSongs: [
+                {
+                    name: "Perfect - Ed Sheeran",
+                    url: "https://assets.codepen.io/1468070/perfect.mp3"
+                },
+                {
+                    name: "All of Me - John Legend",
+                    url: "https://assets.codepen.io/1468070/all-of-me.mp3"
+                },
+                {
+                    name: "Lagu Romantis Indonesia",
+                    url: "https://assets.codepen.io/1468070/romantic-music.mp3"
+                }
+            ]
+        };
+
+        // =========== STATE VARIABLES ===========
+        let currentMessageIndex = 0;
+        let isMusicPlaying = false;
+        let currentSongIndex = 0;
+        let anniversaryDate = null;
+
+        // =========== INITIALIZATION ===========
+        document.addEventListener('DOMContentLoaded', function() {
+            // Simulate loading
+            setTimeout(() => {
+                document.getElementById('loadingScreen').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('loadingScreen').style.display = 'none';
+                }, 1000);
+                
+                initializeWebsite();
+            }, 2000);
+            
+            // Set current year
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+            
+            // Initialize falling hearts
+            createFallingHearts();
+            
+            // Initialize cursor effect
+            initCursorEffect();
+        });
+
+        function initializeWebsite() {
+            // Ask for names
+            const yourName = prompt("Masukkan nama Anda:", "Pacar/Ramadan");
+            const partnerName = prompt("Masukkan nama pasangan Anda:", "Kekasihku");
+            
+            websiteData.yourName = yourName;
+            websiteData.partnerName = partnerName;
+            
+            document.getElementById('yourName').textContent = yourName;
+            document.getElementById('partnerName').textContent = partnerName;
+            
+            // Ask for anniversary
+            const anniversaryInput = prompt("Masukkan tanggal spesial (YYYY-MM-DD):", "2023-01-01");
+            if (anniversaryInput) {
+                anniversaryDate = new Date(anniversaryInput);
+                websiteData.anniversaryDate = anniversaryDate;
+                startLoveTimer();
+            }
+            
+            // Initialize gallery
+            loadGallery();
+            
+            // Initialize messages
+            displayCurrentMessage();
+            
+            // Initialize music player
+            initializeMusicPlayer();
+            
+            // Load guestbook from localStorage
+            loadGuestbook();
+            
+            // Initialize mobile menu
+            initMobileMenu();
+        }
+
+        // =========== GALERI FUNGSI ===========
+        function loadGallery() {
+            const gallery = document.getElementById('photoGallery');
+            gallery.innerHTML = '';
+            
+            websiteData.photos.forEach((photo, index) => {
+                const item = document.createElement('div');
+                item.className = `gallery-item ${photo.category}`;
+                item.innerHTML = `
+                    <a href="${photo.url}" data-fancybox="gallery" data-caption="${photo.caption}">
+                        <img src="${photo.url}" alt="${photo.caption}" loading="lazy">
+                    </a>
+                    <div class="photo-overlay">
+                        <h3>${photo.caption}</h3>
+                        <p>${photo.date}</p>
+                    </div>
+                `;
+                gallery.appendChild(item);
+            });
+            
+            // Initialize fancybox
+            $('[data-fancybox="gallery"]').fancybox({
+                buttons: [
+                    "zoom",
+                    "share",
+                    "slideShow",
+                    "fullScreen",
+                    "download",
+                    "thumbs",
+                    "close"
+                ],
+                animationEffect: "zoom-in-out"
+            });
+        }
+
+        function filterGallery(category) {
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const items = document.querySelectorAll('.gallery-item');
+            items.forEach(item => {
+                if (category === 'all' || item.classList.contains(category)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // =========== PESAN CINTA FUNGSI ===========
+        function displayCurrentMessage() {
+            const allMessages = [...websiteData.loveMessages, ...websiteData.customMessages];
+            document.getElementById('currentMessage').textContent = allMessages[currentMessageIndex];
+        }
+
+        function nextMessage() {
+            const allMessages = [...websiteData.loveMessages, ...websiteData.customMessages];
+            currentMessageIndex = (currentMessageIndex + 1) % allMessages.length;
+            displayCurrentMessage();
+        }
+
+        function prevMessage() {
+            const allMessages = [...websiteData.loveMessages, ...websiteData.customMessages];
+            currentMessageIndex = (currentMessageIndex - 1 + allMessages.length) % allMessages.length;
+            displayCurrentMessage();
+        }
+
+        function addCustomMessage() {
+            const message = prompt("Tulis pesan cinta spesialmu:");
+            if (message) {
+                websiteData.customMessages.push(message);
+                alert("Pesan berhasil ditambahkan! 💝");
+                displayCurrentMessage();
+                saveToLocalStorage();
+            }
+        }
+
+        // =========== LOVE TIMER FUNGSI ===========
+        function startLoveTimer() {
+            if (!websiteData.anniversaryDate) return;
+            
+            function updateTimer() {
+                const now = new Date();
+                const start = websiteData.anniversaryDate;
+                
+                const diff = now - start;
+                
+                const seconds = Math.floor(diff / 1000) % 60;
+                const minutes = Math.floor(diff / (1000 * 60)) % 60;
+                const hours = Math.floor(diff / (1000 * 60 * 60)) % 24;
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24)) % 30;
+                const months = Math.floor(diff / (1000 * 60 * 60 * 24 * 30)) % 12;
+                const years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365));
+                
+                document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+                document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+                document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+                document.getElementById('days').textContent = days;
+                document.getElementById('months').textContent = months;
+                document.getElementById('years').textContent = years;
+            }
+            
+            updateTimer();
+            setInterval(updateTimer, 1000);
+        }
+
+        function setAnniversary() {
+            const dateInput = prompt("Masukkan tanggal spesial (YYYY-MM-DD):", 
+                websiteData.anniversaryDate ? websiteData.anniversaryDate.toISOString().split('T')[0] : "2023-01-01");
+            
+            if (dateInput) {
+                websiteData.anniversaryDate = new Date(dateInput);
+                startLoveTimer();
+                saveToLocalStorage();
+                alert("Tanggal spesial telah diperbarui! 💕");
+            }
+        }
+
+        // =========== MUSIC PLAYER FUNGSI ===========
+        function initializeMusicPlayer() {
+            const selector = document.getElementById('songSelector');
+            websiteData.loveSongs.forEach((song, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = song.name;
+                selector.appendChild(option);
+            });
+            
+            selector.addEventListener('change', function() {
+                currentSongIndex = parseInt(this.value);
+                if (!isNaN(currentSongIndex)) {
+                    playSong(currentSongIndex);
+                }
+            });
+        }
+
+        function toggleMusic() {
+            const musicPlayer = document.getElementById('musicPlayer');
+            musicPlayer.style.display = musicPlayer.style.display === 'none' ? 'flex' : 'none';
+        }
+
+        function togglePlay() {
+            const audio = document.getElementById('backgroundMusic');
+            const playBtn = document.getElementById('playBtn');
+            
+            if (isMusicPlaying) {
+                audio.pause();
+                playBtn.innerHTML = '<i class="fas fa-play"></i>';
+            } else {
+                if (audio.src) {
+                    audio.play();
+                } else {
+                    playSong(0);
+                }
+                playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            }
+            isMusicPlaying = !isMusicPlaying;
+        }
+
+        function playSong(index) {
+            const audio = document.getElementById('backgroundMusic');
+            const song = websiteData.loveSongs[index];
+            
+            audio.src = song.url;
+            audio.play();
+            isMusicPlaying = true;
+            document.getElementById('playBtn').innerHTML = '<i class="fas fa-pause"></i>';
+            document.getElementById('nowPlaying').textContent = song.name;
+            document.getElementById('songSelector').value = index;
+        }
+
+        // =========== GUESTBOOK FUNGSI ===========
+        function addGuestMessage() {
+            const name = document.getElementById('guestName').value.trim();
+            const message = document.getElementById('guestMessage').value.trim();
+            
+            if (!name || !message) {
+                alert("Silakan isi nama dan pesan terlebih dahulu!");
+                return;
+            }
+            
+            const newEntry = {
+                name: name,
+                message: message,
+                date: new Date().toLocaleDateString('id-ID'),
+                time: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
+            };
+            
+            websiteData.guestbook.unshift(newEntry);
+            displayGuestbook();
+            
+            // Clear form
+            document.getElementById('guestName').value = '';
+            document.getElementById('guestMessage').value = '';
+            
+            saveToLocalStorage();
+            alert("Terima kasih atas ucapannya! 💖");
+        }
+
+        function displayGuestbook() {
+            const container = document.getElementById('guestEntries');
+            container.innerHTML = '';
+            
+            websiteData.guestbook.forEach(entry => {
+                const entryDiv = document.createElement('div');
+                entryDiv.className = 'guest-entry';
+                entryDiv.innerHTML = `
+                    <h4 style="color: var(--primary); margin-bottom: 0.5rem;">
+                        ${entry.name} 
+                        <span style="font-size: 0.8rem; color: #666; font-weight: normal;">
+                            - ${entry.date} ${entry.time}
+                        </span>
+                    </h4>
+                    <p>${entry.message}</p>
+                `;
+                container.appendChild(entryDiv);
+            });
+        }
+
+        function loadGuestbook() {
+            const saved = localStorage.getItem('loveWebsiteGuestbook');
+            if (saved) {
+                websiteData.guestbook = JSON.parse(saved);
+                displayGuestbook();
+            }
+        }
+
+        // =========== SPECIAL EFFECTS ===========
+        function createFallingHearts() {
+            const container = document.getElementById('fallingHearts');
+            const heartTypes = ['❤️', '💖', '💕', '💗', '💓', '💞'];
+            
+            for (let i = 0; i < 50; i++) {
+                const heart = document.createElement('div');
+                heart.innerHTML = heartTypes[Math.floor(Math.random() * heartTypes.length)];
+                heart.style.position = 'absolute';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.top = '-50px';
+                heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+                heart.style.opacity = Math.random() * 0.5 + 0.3;
+                heart.style.animation = `fall ${Math.random() * 10 + 10}s linear infinite`;
+                heart.style.animationDelay = Math.random() * 5 + 's';
+                
+                container.appendChild(heart);
+            }
+            
+            // Add fall animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fall {
+                    0% {
+                        transform: translateY(0) rotate(0deg);
+                        opacity: 0.8;
+                    }
+                    100% {
+                        transform: translateY(100vh) rotate(360deg);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        function initCursorEffect() {
+            const cursor = document.getElementById('heartCursor');
+            
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.pageX + 'px';
+                cursor.style.top = e.pageY + 'px';
+                cursor.style.opacity = '1';
+                
+                // Remove hearts after a delay
+                setTimeout(() => {
+                    cursor.style.opacity = '0';
+                }, 100);
+            });
+            
+            // Add hearts on click
+            document.addEventListener('click', (e) => {
+                createClickHeart(e.pageX, e.pageY);
+            });
+        }
+
+        function createClickHeart(x, y) {
+            const heart = document.createElement('div');
+            heart.innerHTML = '❤️';
+            heart.style.position = 'fixed';
+            heart.style.left = x + 'px';
+            heart.style.top = y + 'px';
+            heart.style.fontSize = '30px';
+            heart.style.pointerEvents = 'none';
+            heart.style.zIndex = '9998';
+            heart.style.animation = 'heartExplode 1s ease-out forwards';
+            
+            document.body.appendChild(heart);
+            
+            setTimeout(() => {
+                heart.remove();
+            }, 1000);
+            
+            // Add explosion animation
+            if (!document.querySelector('#heartExplosion')) {
+                const style = document.createElement('style');
+                style.id = 'heartExplosion';
+                style.textContent = `
+                    @keyframes heartExplode {
+                        0% {
+                            transform: scale(1) translateY(0);
+                            opacity: 1;
+                        }
+                        50% {
+                            transform: scale(1.5) translateY(-20px);
+                            opacity: 0.7;
+                        }
+                        100% {
+                            transform: scale(0.5) translateY(-100px);
+                            opacity: 0;
+                        }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
+
+        // =========== SPECIAL FEATURES ===========
+        function revealSurprise() {
+            const surprises = [
+                "Aku akan selalu mencintaimu lebih dari hari kemarin! 💕",
+                "Kamu adalah jawaban dari semua doaku. 🙏",
+                "Bersamamu, aku menemukan arti kebahagiaan sejati. 🌟",
+                "Terima kasih telah menjadi bagian terindah dalam hidupku. 😊",
+                "Aku bersyukur setiap hari karena memiliki kamu. 🌈"
+            ];
+            
+            const randomSurprise = surprises[Math.floor(Math.random() * surprises.length)];
+            
+            // Create surprise modal
+            const modal = document.createElement('div');
+            modal.style.position = 'fixed';
+            modal.style.top = '0';
+            modal.style.left = '0';
+            modal.style.width = '100%';
+            modal.style.height = '100%';
+            modal.style.background = 'rgba(0,0,0,0.8)';
+            modal.style.display = 'flex';
+            modal.style.justifyContent = 'center';
+            modal.style.alignItems = 'center';
+            modal.style.zIndex = '9999';
+            
+            modal.innerHTML = `
+                <div style="background: white; padding: 3rem; border-radius: 20px; text-align: center; max-width: 500px;">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">🎁</div>
+                    <h3 style="color: var(--primary); margin-bottom: 1rem;">Kejutan untuk ${websiteData.partnerName}!</h3>
+                    <p style="font-size: 1.2rem; margin-bottom: 2rem;">${randomSurprise}</p>
+                    <button onclick="this.parentElement.parentElement.remove()" 
+                            style="padding: 0.8rem 2rem; background: var(--primary); color: white; 
+                                   border: none; border-radius: 25px; cursor: pointer;">
+                        Tutup
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        function revealSecret() {
+            const secretMessage = prompt("Tulis pesan rahasia untuk pasanganmu:");
+            if (secretMessage) {
+                // Save secret message to localStorage
+                localStorage.setItem('secretMessage', JSON.stringify({
+                    message: secretMessage,
+                    date: new Date().toISOString()
+                }));
+                
+                // Create beautiful alert
+                const secretDiv = document.createElement('div');
+                secretDiv.style.position = 'fixed';
+                secretDiv.style.top = '50%';
+                secretDiv.style.left = '50%';
+                secretDiv.style.transform = 'translate(-50%, -50%)';
+                secretDiv.style.background = 'linear-gradient(135deg, #ff4d8d, #ff99c8)';
+                secretDiv.style.color = 'white';
+                secretDiv.style.padding = '2rem';
+                secretDiv.style.borderRadius = '20px';
+                secretDiv.style.zIndex = '9999';
+                secretDiv.style.boxShadow = '0 20px 60px rgba(0,0,0,0.3)';
+                secretDiv.style.textAlign = 'center';
+                secretDiv.style.maxWidth = '90%';
+                secretDiv.style.width = '400px';
+                
+                secretDiv.innerHTML = `
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🔒</div>
+                    <h3>Pesan Rahasia Disimpan!</h3>
+                    <p style="margin: 1rem 0; font-style: italic;">"${secretMessage}"</p>
+                    <p style="font-size: 0.9rem; opacity: 0.9;">Hanya ${websiteData.partnerName} yang bisa membukanya nanti</p>
+                    <button onclick="this.parentElement.remove()" 
+                            style="margin-top: 1.5rem; padding: 0.8rem 2rem; background: white; 
+                                   color: #ff4d8d; border: none; border-radius: 25px; 
+                                   cursor: pointer; font-weight: bold;">
+                        Tutup
+                    </button>
+                `;
+                
+                document.body.appendChild(secretDiv);
+            }
+        }
+
+        // =========== UTILITY FUNCTIONS ===========
+        function saveToLocalStorage() {
+            localStorage.setItem('loveWebsiteData', JSON.stringify({
+                customMessages: websiteData.customMessages,
+                guestbook: websiteData.guestbook,
+                anniversaryDate: websiteData.anniversaryDate?.toISOString(),
+                partnerName: websiteData.partnerName,
+                yourName: websiteData.yourName
+            }));
+        }
+
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('loveWebsiteData');
+            if (saved) {
+                const data = JSON.parse(saved);
+                websiteData.customMessages = data.customMessages || [];
+                websiteData.guestbook = data.guestbook || [];
+                websiteData.anniversaryDate = data.anniversaryDate ? new Date(data.anniversaryDate) : null;
+                websiteData.partnerName = data.partnerName || websiteData.partnerName;
+                websiteData.yourName = data.yourName || websiteData.yourName;
+                
+                // Update UI
+                document.getElementById('yourName').textContent = websiteData.yourName;
+                document.getElementById('partnerName').textContent = websiteData.partnerName;
+                displayGuestbook();
+                if (websiteData.anniversaryDate) {
+                    startLoveTimer();
+                }
+            }
+        }
+
+        function initMobileMenu() {
+            const menuBtn = document.getElementById('mobileMenuBtn');
+            const navMenu = document.getElementById('navMenu');
+            
+            menuBtn.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+                menuBtn.innerHTML = navMenu.classList.contains('active') 
+                    ? '<i class="fas fa-times"></i>' 
+                    : '<i class="fas fa-bars"></i>';
+            });
+            
+            // Close menu when clicking a link
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    navMenu.classList.remove('active');
+                    menuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                });
+            });
+        }
+
+        // Load saved data
+        loadFromLocalStorage();
+
+        // Smooth scroll for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Add some random love quotes on scroll
+        window.addEventListener('scroll', () => {
+            const scrollPos = window.scrollY;
+            const heartCursor = document.getElementById('heartCursor');
+            
+            if (scrollPos > 100) {
+                heartCursor.style.fontSize = '25px';
+            } else {
+                heartCursor.style.fontSize = '20px';
+            }
+        });
+
+        // Add floating effect to some elements
+        const floatingElements = document.querySelectorAll('.floating');
+        floatingElements.forEach((el, index) => {
+            el.style.animationDelay = (index * 0.5) + 's';
+        });
+    </script>
+</body>
+</html>
