@@ -731,22 +731,18 @@
     </section>
 
     <!-- MUSIC PLAYER -->
-   <!-- HTML - Tambah di dalam music player -->
-<div class="music-player" id="musicPlayer">
-    <button class="music-btn" onclick="togglePlaySimple()">
-        <i class="fas fa-play" id="playBtn"></i>
-    </button>
-    <div style="min-width: 150px;">
-        <div style="font-size: 0.9rem; color: var(--primary);">Pemutar Musik</div>
-        <div style="font-size: 0.8rem; color: #666;" id="nowPlaying">Pilih lagu</div>
+    <div class="music-player" id="musicPlayer">
+        <button class="music-btn" onclick="togglePlay()" id="playBtn">
+            <i class="fas fa-play"></i>
+        </button>
+        <div style="min-width: 100px;">
+            <div style="font-size: 0.9rem; color: var(--primary);">Lagu Cinta</div>
+            <div style="font-size: 0.8rem; color: #666;" id="nowPlaying">Pilih lagu</div>
+        </div>
+        <select id="songSelector" style="padding: 0.5rem; border-radius: 25px; border: 1px solid #eee;">
+            <option value="">Pilih Lagu</option>
+        </select>
     </div>
-    <select id="songSelector" style="padding: 0.5rem; border-radius: 25px; border: 1px solid #eee;">
-        <option value="">Pilih Lagu</option>
-    </select>
-    
-    <!-- YouTube Player akan muncul di sini -->
-    <div id="youtubeEmbedContainer"></div>
-</div>
 
     <!-- FOOTER -->
     <footer class="footer">
@@ -1022,30 +1018,108 @@
         }
 
         // =========== MUSIC PLAYER FUNGSI ===========
+        // =========== DATA LAGU (HANYA GANTI INI) ===========
 websiteData.loveSongs = [
     { 
         name: "Awal Kisah Selamanya - Raisa", 
-        audioUrl: "https://api.vevioz.com/api/button/mp3/lkgMgPJjHwI"
+        youtubeId: "lkgMgPJjHwI",  // Hanya ID YouTube
+        type: "youtube"
     },
     { 
         name: "Kota Ini Tak Sama Tanpamu - Nadhif Basalamah", 
-        audioUrl: "https://api.vevioz.com/api/button/mp3/grp6FCnioMM"
+        youtubeId: "450p7goxZqg",
+        type: "youtube"
     }
 ];
 
-// =========== FUNGSI PLAY SONG (PERSIS CODE ANDA) ===========
+// =========== KODE YANG SAMA ===========
+function initializeMusicPlayer() {
+    const selector = document.getElementById('songSelector');
+    websiteData.loveSongs.forEach((song, index) => {
+        const option = document.createElement('option');
+        option.value = index;
+        option.textContent = song.name;
+        selector.appendChild(option);
+    });
+    
+    selector.addEventListener('change', function() {
+        currentSongIndex = parseInt(this.value);
+        if (!isNaN(currentSongIndex)) {
+            playSong(currentSongIndex);
+        }
+    });
+}
+
+function toggleMusic() {
+    const musicPlayer = document.getElementById('musicPlayer');
+    musicPlayer.style.display = musicPlayer.style.display === 'none' ? 'flex' : 'none';
+}
+
+// =========== TOGGLE PLAY YANG DIUBAH SEDIKIT ===========
+function togglePlay() {
+    if (youtubePlayer) {
+        if (isMusicPlaying) {
+            youtubePlayer.pauseVideo();
+            document.getElementById('playBtn').innerHTML = '<i class="fas fa-play"></i>';
+        } else {
+            youtubePlayer.playVideo();
+            document.getElementById('playBtn').innerHTML = '<i class="fas fa-pause"></i>';
+        }
+        isMusicPlaying = !isMusicPlaying;
+    }
+}
+
+// =========== PLAYSONG YANG DIUBAH ===========
+let youtubePlayer;
+
 function playSong(index) {
-    const audio = document.getElementById('backgroundMusic');
     const song = websiteData.loveSongs[index];
     
-    // PERSIS SAMA DENGAN CODE LAMA ANDA!
-    audio.src = song.audioUrl;
-    audio.play();
-    isMusicPlaying = true;
-    document.getElementById('playBtn').innerHTML = '<i class="fas fa-pause"></i>';
+    // Update UI - SAMA
     document.getElementById('nowPlaying').textContent = song.name;
     document.getElementById('songSelector').value = index;
+    
+    // Play lagu YouTube
+    playYouTubeSong(song.youtubeId);
+    
+    // Update button - SAMA
+    document.getElementById('playBtn').innerHTML = '<i class="fas fa-pause"></i>';
+    isMusicPlaying = true;
 }
+
+// =========== FUNGSI UTAMA YOUTUBE PLAYER ===========
+function playYouTubeSong(videoId) {
+    if (!youtubePlayer) {
+        // Load YouTube API
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        document.head.appendChild(tag);
+        
+        window.onYouTubeIframeAPIReady = function() {
+            youtubePlayer = new YT.Player('youtubePlayer', {
+                height: '0',
+                width: '0',
+                videoId: videoId,
+                events: {
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        };
+    } else {
+        youtubePlayer.loadVideoById(videoId);
+    }
+}
+
+function onPlayerStateChange(event) {
+    if (event.data == YT.PlayerState.PLAYING) {
+        document.getElementById('playBtn').innerHTML = '<i class="fas fa-pause"></i>';
+        isMusicPlaying = true;
+    } else if (event.data == YT.PlayerState.PAUSED) {
+        document.getElementById('playBtn').innerHTML = '<i class="fas fa-play"></i>';
+        isMusicPlaying = false;
+    }
+}
+
         // =========== GUESTBOOK FUNGSI ===========
         function addGuestMessage() {
             const name = document.getElementById('guestName').value.trim();
